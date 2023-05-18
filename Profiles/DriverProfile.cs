@@ -2,6 +2,7 @@
 using AutoMapper;
 using MapperApp.Models;
 using MapperApp.Models.DTOs.Incoming;
+using MapperApp.Models.DTOs.Outgoing;
 
 namespace MapperApp.Profiles
 {
@@ -41,6 +42,23 @@ namespace MapperApp.Profiles
                 .ForMember(
                     dest => dest.DateUpdated,
                     opt =>  opt.MapFrom(src=> DateTime.Now));
+
+
+            CreateMap<Driver, DriverDto>()
+                .ForMember(
+                    dest => dest.FullName,
+                    //First and Last Name concatenated to create FullName
+                    opt =>  opt.MapFrom(x => $"{x.FirstName} {x.LastName}"))
+                .ForMember(
+                    dest => dest.Id,
+                    opt =>  opt.MapFrom(x => x.Id))
+
+                .ForMember(
+                    dest => dest.DriverNumber,
+                    opt =>  opt.MapFrom(x => x.DriverNumber))
+                .ForMember(
+                    dest => dest.WorldChampionship,
+                    opt =>  opt.MapFrom(x => x.WorldChampionship));
         }
     }
 }
