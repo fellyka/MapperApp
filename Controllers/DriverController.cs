@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using AutoMapper;
 using MapperApp.Models;
 using MapperApp.Models.DTOs.Incoming;
 using Microsoft.AspNetCore.Mvc;
@@ -13,10 +14,12 @@ namespace MapperApp.Controllers
     {
         private readonly ILogger<DriverController> _logger;
         private static List<Driver> drivers = new List<Driver>();
+        private readonly IMapper _mapper;
 
-        public DriverController(ILogger<DriverController> logger)
+        public DriverController(ILogger<DriverController> logger, IMapper mapper)
         {
             _logger = logger;
+            _mapper = mapper;
         }
 
        //Get All drivers
@@ -33,18 +36,8 @@ namespace MapperApp.Controllers
        {
          if(ModelState.IsValid)
          {
-            //new driver object
-            var _driver = new Driver()
-            {
-                Id = Guid.NewGuid(),
-                Status = 1,
-                DateAdded = DateTime.Now,
-                DateUpdated = DateTime.Now,
-                DriverNumber = driver.DriverNumber,
-                FirstName = driver.FirstName,
-                LastName = driver.LastName,
-                WorldChampionship = driver.WorldChampionship
-            };
+            var _driver = _mapper.Map<Driver>(driver);
+            
             drivers.Add(_driver);
             return CreatedAtAction("GetDriver",new {_driver.Id}, _driver);
          }
