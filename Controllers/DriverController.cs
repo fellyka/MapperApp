@@ -3,6 +3,7 @@ using System.Linq;
 using AutoMapper;
 using MapperApp.Models;
 using MapperApp.Models.DTOs.Incoming;
+using MapperApp.Models.DTOs.Outgoing;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
@@ -27,7 +28,9 @@ namespace MapperApp.Controllers
        public IActionResult GetDrivers()
        {
            var allDrivers = drivers.Where( x=> x.Status == 1).ToList();
-           return Ok(allDrivers);
+           
+           var _drivers = _mapper.Map<IEnumerable<DriverDto>>(allDrivers);
+           return Ok(_drivers);
        }
 
        //Post A driver
@@ -37,7 +40,7 @@ namespace MapperApp.Controllers
          if(ModelState.IsValid)
          {
             var _driver = _mapper.Map<Driver>(driver);
-            
+
             drivers.Add(_driver);
             return CreatedAtAction("GetDriver",new {_driver.Id}, _driver);
          }
