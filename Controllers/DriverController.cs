@@ -1,9 +1,7 @@
-using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
-using System.Threading.Tasks;
 using MapperApp.Models;
+using MapperApp.Models.DTOs.Incoming;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
@@ -31,12 +29,24 @@ namespace MapperApp.Controllers
 
        //Post A driver
        [HttpPost]
-       public IActionResult CreateDriver(Driver driver)
+       public IActionResult CreateDriver(DriverForCreationDto driver)
        {
          if(ModelState.IsValid)
          {
-            drivers.Add(driver);
-            return CreatedAtAction("GetDriver",new {driver.Id}, driver);
+            //new driver object
+            var _driver = new Driver()
+            {
+                Id = Guid.NewGuid(),
+                Status = 1,
+                DateAdded = DateTime.Now,
+                DateUpdated = DateTime.Now,
+                DriverNumber = driver.DriverNumber,
+                FirstName = driver.FirstName,
+                LastName = driver.LastName,
+                WorldChampionship = driver.WorldChampionship
+            };
+            drivers.Add(_driver);
+            return CreatedAtAction("GetDriver",new {_driver.Id}, _driver);
          }
          //In case soething goes wrong
          return new JsonResult("Something went wrong") {StatusCode = 500 };
