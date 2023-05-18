@@ -28,7 +28,7 @@ namespace MapperApp.Controllers
        public IActionResult GetDrivers()
        {
            var allDrivers = drivers.Where( x=> x.Status == 1).ToList();
-           
+
            var _drivers = _mapper.Map<IEnumerable<DriverDto>>(allDrivers);
            return Ok(_drivers);
        }
@@ -42,7 +42,8 @@ namespace MapperApp.Controllers
             var _driver = _mapper.Map<Driver>(driver);
 
             drivers.Add(_driver);
-            return CreatedAtAction("GetDriver",new {_driver.Id}, _driver);
+            var newDriver = _mapper.Map<DriverDto>(_driver);
+            return CreatedAtAction("GetDriver",new {_driver.Id}, newDriver);
          }
          //In case soething goes wrong
          return new JsonResult("Something went wrong") {StatusCode = 500 };
